@@ -52,9 +52,6 @@ int main() {
   const string word = words[(rand() % words.size() - 1)];
   // cout << word << endl;
   string input;
-  string output;
-  // https://g.co/gemini/share/3fd54e2828dd
-  output.resize(word.length(), '_');
 
   int guesses = 6;
 
@@ -74,6 +71,7 @@ int main() {
       break;
     }
 	
+	// Nicht sehr kulant, benötigt besser gepflegte Wortliste
 	if (std::find(words.begin(), words.end(), input) == words.end()) {
 		cout << "Das scheint kein valides Wort zu sein!" << endl;
 		guess--;
@@ -92,6 +90,11 @@ int main() {
 					corrects++;
 				}
 			}
+			// Beispiel
+			// 	Wort: katze
+			// 	Input: parat
+			// 	Output: _y__!
+			// 	Output, ohne diesen Check: _y_!!
 			if(std::count(word.begin(), word.end(), input[i]) > corrects) {
 				cout << "!";
 			} else {
