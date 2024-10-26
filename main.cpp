@@ -17,9 +17,8 @@ string strToLower(string str) {
 	return str;
 }
 
-vector<string> getWords() {
+vector<string> getWordsFromFile(string filename) {
 	// https://g.co/gemini/share/9781bb423d9b
-	string filename = "german.txt";
     ifstream file(filename);
 
 	vector<string> words;
@@ -42,15 +41,29 @@ vector<string> getWords() {
 
     file.close();
 	
+	if(words.size() == 0) {
+		cout << "Bitte schließe die Datei \"" + filename + "\" und versuche es erneut!";
+		throw "Bitte schließe die Datei \"" + filename + "\" und versuche es erneut!";
+	}
+	
 	return words;
 }
+
 
 int main() {
   // 'Random seed'
   srand(time(0));
-  const vector<string> words = getWords();
+  
+  // Nur normale Wörter in german.txt, 'komischere' Wörter sind in german_valid.txt gespeichert
+  const vector<string> words = getWordsFromFile("german.txt");
+  const vector<string> validInputs = getWordsFromFile("german_valid.txt");
+  
+  cout << endl;
+  cout << "Ich habe ein zufälliges Wort aus einem Pool von "; cout << words.size(); cout << " Optionen gewählt" << endl;
+  cout << "Vom Program anerkannte mögliche Inputs: "; cout <<  validInputs.size() << endl;
+  cout << endl;
+  
   const string word = words[(rand() % words.size() - 1)];
-  // cout << word << endl;
   string input;
 
   int guesses = 6;
@@ -72,12 +85,13 @@ int main() {
     }
 	
 	// Nicht sehr kulant, benötigt besser gepflegte Wortliste
-	if (std::find(words.begin(), words.end(), input) == words.end()) {
+	if (std::find(validInputs.begin(), validInputs.end(), input) == validInputs.end()) {
 		cout << "Das scheint kein valides Wort zu sein!" << endl;
 		guess--;
 		continue;
 	}
 
+	cout << word.size();
     for(int i = 0; i < 5; i++) {
 		if(input[i] == word[i]) {
 			cout << "y";
