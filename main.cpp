@@ -91,7 +91,6 @@ int main() {
 		continue;
 	}
 
-	cout << word.size();
     for(int i = 0; i < 5; i++) {
 		if(input[i] == word[i]) {
 			cout << "y";
