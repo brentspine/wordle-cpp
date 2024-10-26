@@ -1,2 +1,7 @@
-German: Filtered https://github.com/brentspine/BombPartyBotSelenium/tree/master/src/main/resources
- --> gescraped von jkml.fun
+German:
+ --> Filtered https://github.com/brentspine/BombPartyBotSelenium/tree/master/src/main/resources
+ --> https://github.com/wordle-helper/words/blob/main/german-wordle-words.txt
+
+English: 
+ --> https://fly.wordfinderapi.com/api/search?contains=_____&length=5&word_sorting=az&group_by_length=false&page_size=10000000000000&dictionary=wordle
+ --> Siehe scrape_words.py

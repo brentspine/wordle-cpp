@@ -4,6 +4,9 @@
 #include <fstream>
 #include <vector>
 #include <locale>         // std::locale, std::tolower
+#include <stdexcept>
+
+#include <typeinfo>	      // cout << typeid(variable).name() << endl;
 
 using namespace std;
 
@@ -11,6 +14,14 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
+using std::exception;
+
+// https://chatgpt.com/share/671d50a2-a57c-8001-be40-d1c1b5859f46
+class WordleException : public std::runtime_error
+{
+public:
+    WordleException(const std::string& err) : std::runtime_error(err) {}       
+};
 
 string strToLower(string str) {
 	std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){ return std::tolower(c); });
@@ -23,7 +34,8 @@ vector<string> getWordsFromFile(string filename) {
 
 	vector<string> words;
     if (!file.is_open()) {
-        cerr << "Error opening file: " << filename << endl;
+        cerr << "Fehler beim Öffnen der Datei, existiert sie? Angegebene Datei: " << filename << endl;
+		throw WordleException("Fehler beim Öffnen der Datei, existiert sie? Angegebene Datei: " + filename);
         return words;
     }
 
@@ -43,8 +55,8 @@ vector<string> getWordsFromFile(string filename) {
     file.close();
 	
 	if(words.size() == 0) {
-		cout << "Bitte schließe die Datei \"" + filename + "\" und versuche es erneut!";
-		throw "Bitte schließe die Datei \"" + filename + "\" und versuche es erneut!";
+		cerr << "Bitte schließe die Datei \"" << filename << "\"und versuche es erneut!";
+		throw WordleException("Bitte schließe die Datei \"" + filename + "\"und versuche es erneut!");
 	}
 	
 	return words;
@@ -55,13 +67,38 @@ int main() {
   // 'Random seed'
   srand(time(0));
   
+  bool checkDictionary = true;
+  string wordsFileName;
+  cout << "Datei für Wörterauswahl eingeben (Leer für Standard): ";
+  // https://stackoverflow.com/questions/4999650/c-how-do-i-check-if-the-cin-buffer-is-empty
+  getline(std::cin, wordsFileName);
+  if(wordsFileName.length() <= 1) {
+	  wordsFileName = "german.txt";
+  }
+  
+  string validInputsFileName;
+  cout << "Datei für Dictionary eingeben (Leer für Standard, 'no' = keines): ";
+  getline(std::cin, validInputsFileName);
+  if(validInputsFileName.length() <= 1) {
+	  validInputsFileName = "german_valid.txt";
+  }
+  if(validInputsFileName == "no") {
+	checkDictionary = false;
+	cout << "Dictionary wurde deaktiviert!" << endl;
+  }
+  
   // Nur normale Wörter in german.txt, 'komischere' Wörter sind in german_valid.txt gespeichert
-  const vector<string> words = getWordsFromFile("german.txt");
-  const vector<string> validInputs = getWordsFromFile("german_valid.txt");
+  const vector<string> words = getWordsFromFile(wordsFileName);
+  const vector<string> validInputs;
+  if(checkDictionary) {
+	  vector<string> validInputs = getWordsFromFile(validInputsFileName);
+  } else {
+	  vector<string> validInputs = {};
+  }
   
   cout << endl;
   cout << "Ich habe ein zufälliges Wort aus einem Pool von "; cout << words.size(); cout << " Optionen gewählt" << endl;
-  cout << "Vom Program anerkannte mögliche Inputs: "; cout <<  validInputs.size() << endl;
+  cout << "Vom Program anerkannte mögliche Inputs: "; cout << (validInputs.size() > 0 ? std::to_string(validInputs.size()) : "Alle erlaubt") << endl;
   cout << endl;
   
   const string word = words[(rand() % words.size() - 1)];
@@ -86,7 +123,7 @@ int main() {
     }
 	
 	// Nicht sehr kulant, benötigt besser gepflegte Wortliste
-	if (std::find(validInputs.begin(), validInputs.end(), input) == validInputs.end()) {
+	if (checkDictionary && std::find(validInputs.begin(), validInputs.end(), input) == validInputs.end()) {
 		cout << "Das scheint kein valides Wort zu sein!" << endl;
 		guess--;
 		continue;
