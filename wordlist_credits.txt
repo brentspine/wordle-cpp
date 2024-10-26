@@ -1,0 +1,2 @@
+German: Filtered https://github.com/brentspine/BombPartyBotSelenium/tree/master/src/main/resources
+ --> gescraped von jkml.fun

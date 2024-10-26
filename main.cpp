@@ -18,7 +18,8 @@ string strToLower(string str) {
 }
 
 vector<string> getWords() {
-	string filename = "german.txt"; // Replace with your file name
+	// https://g.co/gemini/share/9781bb423d9b
+	string filename = "german.txt";
     ifstream file(filename);
 
 	vector<string> words;
