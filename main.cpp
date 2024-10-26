@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include <typeinfo>	      // cout << typeid(variable).name() << endl;
+#include <unordered_map>
 
 using namespace std;
 
@@ -22,6 +23,27 @@ class WordleException : public std::runtime_error
 public:
     WordleException(const std::string& err) : std::runtime_error(err) {}       
 };
+
+// https://chatgpt.com/share/671d550e-c4c8-8001-9929-257e49f8215c
+enum class ConsoleColor {
+    Reset = 0,
+    Black = 30,
+    Red = 31,
+    Green = 32,
+    Yellow = 33,
+    Blue = 34,
+    Magenta = 35,
+    Cyan = 36,
+    White = 37
+};
+
+string getCC(ConsoleColor color) {
+    return "\033[" + std::to_string(static_cast<int>(color)) + "m";
+}
+
+string getCCReset() {
+    return getCC(ConsoleColor::Reset);
+}
 
 string strToLower(string str) {
 	std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){ return std::tolower(c); });
@@ -102,6 +124,15 @@ int main() {
   cout << endl;
   
   const string word = words[(rand() % words.size() - 1)];
+  
+  const std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
+  std::unordered_map<char, int> char_map;
+  for (char c : alphabet) {
+    char_map[c] = 0;
+  }
+  
+  string output_history = "";
+  
   string input;
 
   int guesses = 6;
@@ -129,9 +160,12 @@ int main() {
 		continue;
 	}
 
+	output_history += input;
+	string appendAtBack = "    ";
     for(int i = 0; i < 5; i++) {
 		if(input[i] == word[i]) {
-			cout << "y";
+			// output_history += getCC(ConsoleColor::Green) + input[i];
+			appendAtBack += "y";
 		}
 		else if(word.find(input[i]) != std::string::npos) {
 			// Im Falle von doppelten Buchstaben im Wort --> O(n^2) geht besser?
@@ -147,14 +181,20 @@ int main() {
 			// 	Output: _y__!
 			// 	Output, ohne diesen Check: _y_!!
 			if(std::count(word.begin(), word.end(), input[i]) > corrects) {
-				cout << "!";
+				// output_history +=  getCC(ConsoleColor::Yellow) + input[i];
+				appendAtBack += "!";
 			} else {
-				cout << "_";
+				// output_history += getCC(ConsoleColor::White) + input[i];
+				appendAtBack += "_";
 			}
 		} else {
-			cout << "_";
+			// output_history += getCC(ConsoleColor::White) + input[i];
+			appendAtBack += "_";
 		}
 	}
+	// output_history += getCCReset() += endl;
+	output_history += appendAtBack + "\n";
+	cout << output_history;
 	cout << endl;
   }
   cout << "Das Wort war: ";
