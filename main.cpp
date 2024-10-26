@@ -30,12 +30,13 @@ vector<string> getWordsFromFile(string filename) {
     string word;
 
     while (getline(file, word)) {
-		vector<string> disallowed = {"ä", "ö", "ü"};
+		vector<string> disallowed = {"ä", "ö", "ü", "ß"};
 		for (const auto& substring : disallowed) {
 			if (word.find(substring) != std::string::npos) {
 				continue;
 			}
 		}
+		if(word.length() != 5) continue;
         words.push_back(strToLower(word));
     }
 
