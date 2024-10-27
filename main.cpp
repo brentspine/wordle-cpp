@@ -84,8 +84,7 @@ vector<string> getWordsFromFile(string filename) {
 	return words;
 }
 
-
-int main() {
+void game() {
   // 'Random seed'
   srand(time(0));
   
@@ -199,4 +198,27 @@ int main() {
   }
   cout << "Das Wort war: ";
   cout << word << endl;
+}
+
+int main() {
+	game();
+	while(true) {
+		string playAnother = "";
+		cout << "Erneut spielen? (y/n) ";
+		// https://chatgpt.com/share/671e82a4-0620-8001-a3f0-a051e8166b59
+		cin.ignore();
+		getline(std::cin, playAnother);
+		if(playAnother == "y") {
+			game();
+			continue;
+		}
+		else if(playAnother == "n") {
+			return 0;
+		}
+		else {
+			continue;
+		}
+		cout << "Reloop" << endl;
+	}
+	return 0;
 }
