@@ -117,7 +117,6 @@ void game() {
   } else {
 	  validInputs = {};
   }
-  cout << validInputs.size() << endl; // Outputs 0
   
   cout << endl;
   cout << "Ich habe ein zufälliges Wort aus einem Pool von "; cout << words.size(); cout << " Optionen gewählt" << endl;
