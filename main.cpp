@@ -94,14 +94,14 @@ void game() {
   // https://stackoverflow.com/questions/4999650/c-how-do-i-check-if-the-cin-buffer-is-empty
   getline(std::cin, wordsFileName);
   if(wordsFileName.length() <= 1) {
-	  wordsFileName = "german.txt";
+	  wordsFileName = "english.txt";
   }
   
   string validInputsFileName;
   cout << "Datei für Dictionary eingeben (Leer für Standard, 'no' = keines): ";
   getline(std::cin, validInputsFileName);
   if(validInputsFileName.length() <= 1) {
-	  validInputsFileName = "german_valid.txt";
+	  validInputsFileName = "english.txt";
   }
   if(validInputsFileName == "no") {
 	checkDictionary = false;
