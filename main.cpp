@@ -110,16 +110,18 @@ void game() {
   
   // Nur normale Wörter in german.txt, 'komischere' Wörter sind in german_valid.txt gespeichert
   const vector<string> words = getWordsFromFile(wordsFileName);
-  const vector<string> validInputs;
+  // https://chatgpt.com/share/671fcde6-c850-8001-9403-788c596babed
+  vector<string> validInputs;
   if(checkDictionary) {
-	  vector<string> validInputs = getWordsFromFile(validInputsFileName);
+	  validInputs = getWordsFromFile(validInputsFileName);
   } else {
-	  vector<string> validInputs = {};
+	  validInputs = {};
   }
+  cout << validInputs.size() << endl; // Outputs 0
   
   cout << endl;
   cout << "Ich habe ein zufälliges Wort aus einem Pool von "; cout << words.size(); cout << " Optionen gewählt" << endl;
-  cout << "Vom Program anerkannte mögliche Inputs: "; cout << (validInputs.size() > 0 ? std::to_string(validInputs.size()) : "Alle erlaubt") << endl;
+  cout << "Vom Program anerkannte mögliche Inputs: "; cout << ((validInputs.size() > 0) ? std::to_string(validInputs.size()) : "Alle erlaubt") << endl;
   cout << endl;
   
   const string word = words[(rand() % words.size() - 1)];
@@ -218,7 +220,6 @@ int main() {
 		else {
 			continue;
 		}
-		cout << "Reloop" << endl;
 	}
 	return 0;
 }
